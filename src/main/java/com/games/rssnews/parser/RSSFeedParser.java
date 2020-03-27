@@ -1,6 +1,8 @@
 package com.games.rssnews.parser;
 
 import com.games.rssnews.model.RssItem;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -11,23 +13,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+@Component
 public class RSSFeedParser {
     static final String TITLE = "title";
     static final String DESCRIPTION = "description";
-    static final String LANGUAGE = "language";
-    static final String COPYRIGHT = "copyright";
     static final String LINK = "link";
     static final String AUTHOR = "author";
     static final String ITEM = "item";
-    static final String PUB_DATE = "pubDate";
     static final String GUID = "guid";
 
     final URL url;
+    @Value("${rss.url}")
+    private String feedUrl;
 
-    public RSSFeedParser(String feedUrl) {
+    public RSSFeedParser() {
         try {
             this.url = new URL(feedUrl);
         } catch (MalformedURLException e) {
@@ -36,26 +45,18 @@ public class RSSFeedParser {
     }
 
     public List<RssItem> readFeed() {
-        List<RssItem> rssItems = new ArrayList<>();
-        RssItem message = null;
+        final List<RssItem> rssItems = new ArrayList<>();
         try {
             boolean isFeedHeader = true;
-            // Set header values intial to the empty string
             String description = "";
             String title = "";
             String link = "";
-            String language = "";
-            String copyright = "";
             String author = "";
-            String pubdate = "";
             String guid = "";
 
-            // First create a new XMLInputFactory
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-            // Setup a new eventReader
             InputStream in = read();
             XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
-            // read the XML document
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 if (event.isStartElement()) {
@@ -65,7 +66,7 @@ public class RSSFeedParser {
                             if (isFeedHeader) {
                                 isFeedHeader = false;
                             }
-                            event = eventReader.nextEvent();
+                            eventReader.nextEvent();
                             break;
                         case TITLE:
                             title = getCharacterData(event, eventReader);
@@ -79,31 +80,21 @@ public class RSSFeedParser {
                         case GUID:
                             guid = getCharacterData(event, eventReader);
                             break;
-                        case LANGUAGE:
-                            language = getCharacterData(event, eventReader);
-                            break;
                         case AUTHOR:
                             author = getCharacterData(event, eventReader);
-                            break;
-                        case PUB_DATE:
-                            pubdate = getCharacterData(event, eventReader);
-                            break;
-                        case COPYRIGHT:
-                            copyright = getCharacterData(event, eventReader);
                             break;
                     }
                 } else if (event.isEndElement()) {
                     if (event.asEndElement().getName().getLocalPart().equals(ITEM)) {
-                        message = new RssItem();
-                        message.setAuthor(author);
-                        message.setDescription(description);
-                        message.setGuid(guid);
-                        message.setLink(link);
-                        message.setTitle(title);
-                        rssItems.add(message);
-                        message = null;
+                        final RssItem rssItem = new RssItem();
+                        rssItem.setAuthor(author);
+                        rssItem.setDescription(description);
+                        rssItem.setGuid(guid);
+                        rssItem.setLink(link);
+                        rssItem.setTitle(title);
+                        rssItem.setPubDate(generatePubDate());
+                        rssItems.add(rssItem);
                         eventReader.nextEvent();
-                        continue;
                     }
                 }
             }
@@ -111,6 +102,19 @@ public class RSSFeedParser {
             throw new RuntimeException(e);
         }
         return rssItems;
+    }
+
+    private ZonedDateTime generatePubDate() {
+        GregorianCalendar gc = new GregorianCalendar();
+        int year = randBetween(2019, 2020);
+        gc.set(Calendar.YEAR, year);
+        int dayOfYear = randBetween(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR));
+        gc.set(Calendar.DAY_OF_YEAR, dayOfYear);
+        return gc.toZonedDateTime();
+    }
+
+    public static int randBetween(int start, int end) {
+        return start + (int) Math.round(Math.random() * (end - start));
     }
 
     private String getCharacterData(XMLEvent event, XMLEventReader eventReader)

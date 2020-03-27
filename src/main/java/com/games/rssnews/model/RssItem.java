@@ -6,15 +6,16 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class RssItem {
 
-    private String id;
-    private final String title;
-    private final String description;
-    private final String link;
-    private final String author;
-    private final String guid;
-    private final ZonedDateTime pubDate;
+    private String title;
+    private String description;
+    private String link;
+    private String author;
+    private String guid;
+    private ZonedDateTime pubDate;
+
 }
