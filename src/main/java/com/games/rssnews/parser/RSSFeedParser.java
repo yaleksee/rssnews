@@ -33,6 +33,7 @@ public class RSSFeedParser {
     static final String GUID = "guid";
 
     final URL url;
+
     @Value("${rss.url}")
     private String feedUrl;
 

@@ -4,6 +4,7 @@ import com.games.rssnews.model.RssItem;
 import com.games.rssnews.parser.RSSFeedParser;
 import com.games.rssnews.service.RssItemsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +17,12 @@ public class SchedulerApp {
     private final RssItemsService rssItemsService;
     private final RSSFeedParser rssFeedParser;
 
-    @Scheduled(fixedRate = 5000)
+    @Value("${fixedRate}")
+    private final Integer fixedRate;
+
+    @Scheduled(fixedRate)
     public void execute() {
-        List<RssItem> rssItems = null;
+        final List<RssItem> rssItems;
         try {
             rssItems = rssFeedParser.readFeed();
             rssItemsService.saveAll(rssItems);
