@@ -24,8 +24,7 @@ public class RssItemRepository {
     public void save(RssItem rssItem) {
         try {
             jdbcTemplate.update(
-                    "insert into rss_item (id, title, description, link, autor, guid, pub_date) values(?,?,?,?,?,?,?)",
-                    rssItem.getId(),
+                    "insert into rss_item (title, description, link, autor, guid, pub_date) values(?,?,?,?,?,?,?)",
                     rssItem.getTitle(),
                     rssItem.getDescription(),
                     rssItem.getLink(),

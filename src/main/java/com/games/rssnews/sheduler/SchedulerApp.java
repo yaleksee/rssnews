@@ -17,10 +17,7 @@ public class SchedulerApp {
     private final RssItemsService rssItemsService;
     private final RSSFeedParser rssFeedParser;
 
-    @Value("${fixedRate}")
-    private final Integer fixedRate;
-
-    @Scheduled(fixedRate)
+    @Scheduled(fixedDelay=5000)
     public void execute() {
         final List<RssItem> rssItems;
         try {

@@ -1,5 +1,6 @@
 package com.games.rssnews.parser;
 
+import com.games.rssnews.exception.XmlParsingException;
 import com.games.rssnews.model.RssItem;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -100,7 +97,7 @@ public class RSSFeedParser {
                 }
             }
         } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
+            throw new XmlParsingException("Error parsing XML ", e);
         }
         return rssItems;
     }

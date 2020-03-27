@@ -1,5 +1,6 @@
 package com.games.rssnews.service.imp;
 
+import com.games.rssnews.exception.ResourceNotFoundException;
 import com.games.rssnews.model.RssItem;
 import com.games.rssnews.service.RssItemsService;
 import com.games.rssnews.service.repository.RssItemRepository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,10 @@ public class RssItemsServiceImpl implements RssItemsService {
 
     @Override
     public @NotNull List<RssItem> getItems(@NotNull int count) {
+        Optional<List<RssItem>> rssItems = Optional.ofNullable(rssItemRepository.getItems(count));
+        if (rssItems.isPresent()) {
+            throw new ResourceNotFoundException("Entry not found for this id : " + count);
+        }
         return rssItemRepository.getItems(count);
     }
 }
