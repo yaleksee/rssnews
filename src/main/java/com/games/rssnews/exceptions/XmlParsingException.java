@@ -1,7 +1,4 @@
-package com.games.rssnews.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package com.games.rssnews.exceptions;
 
 public class XmlParsingException extends RuntimeException{
 

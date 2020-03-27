@@ -1,19 +1,13 @@
 package com.games.rssnews.parser;
 
-import com.games.rssnews.exception.XmlParsingException;
+import com.games.rssnews.exceptions.XmlParsingException;
 import com.games.rssnews.model.RssItem;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,20 +23,9 @@ public class RSSFeedParser {
     static final String ITEM = "item";
     static final String GUID = "guid";
 
-    final URL url;
 
-    @Value("${rss.url}")
-    private String feedUrl;
 
-    public RSSFeedParser() {
-        try {
-            this.url = new URL(feedUrl);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<RssItem> readFeed() {
+    public List<RssItem> readFeed(XMLEventReader eventReader) {
         final List<RssItem> rssItems = new ArrayList<>();
         try {
             boolean isFeedHeader = true;
@@ -52,9 +35,6 @@ public class RSSFeedParser {
             String author = "";
             String guid = "";
 
-            XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-            InputStream in = read();
-            XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 if (event.isStartElement()) {
@@ -123,13 +103,5 @@ public class RSSFeedParser {
             result = event.asCharacters().getData();
         }
         return result;
-    }
-
-    private InputStream read() {
-        try {
-            return url.openStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

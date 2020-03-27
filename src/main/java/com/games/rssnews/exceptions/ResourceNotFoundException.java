@@ -1,4 +1,4 @@
-package com.games.rssnews.exception;
+package com.games.rssnews.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

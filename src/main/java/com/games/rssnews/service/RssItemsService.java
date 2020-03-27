@@ -11,10 +11,11 @@ public interface RssItemsService {
 
     void deleteAll();
 
-    void getAll();
+    @NotNull
+    List<RssItem> getAll();
 
     void saveAll(@NotNull List<RssItem> storedItems);
 
     @NotNull
-    List<RssItem> getItems(@NotNull int count);
+    List<RssItem> getItems(@NotNull Long count);
 }

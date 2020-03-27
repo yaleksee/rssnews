@@ -6,5 +6,6 @@ create table rss_item
    link varchar(255) not null,
    author varchar(255) not null,
    guid varchar(255) not null,
-   pub_date TIMESTAMP WITH TIME ZONE
+   pub_date TIMESTAMP WITH TIME ZONE,
+   primary key(id)
 );

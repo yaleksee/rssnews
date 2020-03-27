@@ -1,6 +1,6 @@
 package com.games.rssnews.service.imp;
 
-import com.games.rssnews.exception.ResourceNotFoundException;
+import com.games.rssnews.exceptions.ResourceNotFoundException;
 import com.games.rssnews.model.RssItem;
 import com.games.rssnews.service.RssItemsService;
 import com.games.rssnews.service.repository.RssItemRepository;
@@ -32,13 +32,13 @@ public class RssItemsServiceImpl implements RssItemsService {
     }
 
     @Override
-    public void getAll() {
-        rssItemRepository.getAll();
+    public List<RssItem> getAll() {
+        return rssItemRepository.getAll();
     }
 
 
     @Override
-    public @NotNull List<RssItem> getItems(@NotNull int count) {
+    public @NotNull List<RssItem> getItems(@NotNull Long count) {
         Optional<List<RssItem>> rssItems = Optional.ofNullable(rssItemRepository.getItems(count));
         if (rssItems.isPresent()) {
             throw new ResourceNotFoundException("Entry not found for this id : " + count);
