@@ -1,5 +1,6 @@
 package com.games.rssreader.controller;
 
+import com.games.rssreader.exceptions.ResourceNotFoundException;
 import com.games.rssreader.model.RssMessages;
 import com.games.rssreader.service.RssService;
 import io.swagger.annotations.ApiOperation;
@@ -18,7 +19,7 @@ public class GetRssItems {
 
     @GetMapping("/get")
     @ApiOperation("get messages by count")
-    public List<RssMessages> getItems(@RequestParam(value = "count") @NotNull Long count) throws Exception {
+    public List<RssMessages> getItems(@RequestParam(value = "count") @NotNull Long count) throws ResourceNotFoundException {
         return rssService.getItems(count);
     }
 

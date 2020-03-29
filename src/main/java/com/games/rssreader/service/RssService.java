@@ -18,5 +18,5 @@ public interface RssService {
     void saveAll(@NotNull List<RssMessages> storedItems);
 
     @NotNull
-    List<RssMessages> getItems(@NotNull Long count) throws Exception;
+    List<RssMessages> getItems(@NotNull Long count);
 }

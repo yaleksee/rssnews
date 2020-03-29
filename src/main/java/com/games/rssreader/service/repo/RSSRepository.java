@@ -1,10 +1,10 @@
 package com.games.rssreader.service.repo;
 
 import com.games.rssreader.exceptions.ResourceNotFoundException;
-import com.games.rssreader.exceptions.SQLCustomException;
 import com.games.rssreader.model.RssMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,7 +37,7 @@ public class RSSRepository {
                     rssMessages.getLink(),
                     rssMessages.getGuid(),
                     rssMessages.getPubDate().toInstant());
-        } catch (SQLCustomException e) {
+        } catch (DuplicateKeyException e) {
             log.error(e.getMessage());
         }
     }

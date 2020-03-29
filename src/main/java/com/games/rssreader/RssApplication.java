@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class RssnewsApplication {
+public class RssApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RssnewsApplication.class, args);
+        SpringApplication.run(RssApplication.class, args);
     }
 
 }

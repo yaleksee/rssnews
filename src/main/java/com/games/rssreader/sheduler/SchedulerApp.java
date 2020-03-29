@@ -18,6 +18,8 @@ import java.net.URL;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import static javax.xml.stream.XMLInputFactory.newInstance;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -30,10 +32,11 @@ public class SchedulerApp {
     public void execute() {
         final List<RssMessages> rssItems;
         try {
-            log.info("recording posts from rss feed on time: "+ " " + new GregorianCalendar().getTime().toString());
+            log.info("recording posts from rss feed on time: " + " " + new GregorianCalendar().getTime().toString());
             rssItems = rssFeedParser.readFeed(read());
             rssService.saveAll(rssItems);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 
@@ -43,10 +46,11 @@ public class SchedulerApp {
     public XMLEventReader read() {
         try {
             final URL url = new URL(feedUrl);
-            final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+            final XMLInputFactory inputFactory = newInstance();
             final InputStream in = url.openStream();
             return inputFactory.createXMLEventReader(in);
         } catch (XMLStreamException | IOException e) {
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }

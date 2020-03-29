@@ -20,10 +20,10 @@ public class RSSFeedParser {
     static final String LINK = "link";
     static final String ITEM = "item";
     static final String GUID = "guid";
+    private final List<RssMessages> rssItems = new ArrayList<>();
 
 
     public List<RssMessages> readFeed(XMLEventReader eventReader) {
-        final List<RssMessages> rssItems = new ArrayList<>();
         try {
             boolean isFeedHeader = true;
             String description = "";
@@ -42,19 +42,24 @@ public class RSSFeedParser {
                             eventReader.nextEvent();
                             break;
                         case TITLE:
-                            title = getCharacterData(event, eventReader);
+                            title = getCharacterData(eventReader);
                             break;
                         case DESCRIPTION:
-                            description = getCharacterData(event, eventReader);
+                            description = getCharacterData(eventReader);
                             break;
                         case LINK:
-                            link = getCharacterData(event, eventReader);
+                            link = getCharacterData(eventReader);
                             break;
                         case GUID:
-                            guid = getCharacterData(event, eventReader);
+                            guid = getCharacterData(eventReader);
+                            break;
+                        default:
                             break;
                     }
-                } else if (event.isEndElement()) {
+                } else {
+                    if (!event.isEndElement()) {
+                        continue;
+                    }
                     if (event.asEndElement().getName().getLocalPart().equals(ITEM)) {
                         final RssMessages rssItem = new RssMessages();
                         Long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
@@ -89,10 +94,10 @@ public class RSSFeedParser {
         return start + (int) Math.round(Math.random() * (end - start));
     }
 
-    private String getCharacterData(XMLEvent event, XMLEventReader eventReader)
+    private String getCharacterData(XMLEventReader eventReader)
             throws XMLStreamException {
         String result = "";
-        event = eventReader.nextEvent();
+        final XMLEvent event = eventReader.nextEvent();
         if (event instanceof Characters) {
             result = event.asCharacters().getData();
         }
