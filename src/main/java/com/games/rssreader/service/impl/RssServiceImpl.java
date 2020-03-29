@@ -41,7 +41,7 @@ public class RssServiceImpl implements RssService {
     @Override
     public @NotNull List<RssMessages> getItems(@NotNull Long count) {
         Optional<List<RssMessages>> rssItems = Optional.ofNullable(rssRepository.getItems(count));
-        if (rssItems.isEmpty()) {
+        if (!rssItems.isPresent()) {
             log.error("Entry not found for this count : " + count);
             throw new ResourceNotFoundException("Entry not found for this count : " + count);
         }

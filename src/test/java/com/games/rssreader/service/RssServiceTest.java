@@ -41,7 +41,7 @@ public class RssServiceTest {
     public void testStatus200() throws Exception {
         // when
         String url = "http://localhost:" + port + "/api";
-        var entity = testRestTemplate.getForEntity(url, List.class);
+        ResponseEntity<List> entity = testRestTemplate.getForEntity(url, List.class);
         // then
         assertThat(entity.getStatusCode(), is(HttpStatus.OK));
     }
