@@ -20,25 +20,21 @@ public class RssServiceImpl implements RssService {
 
     @Override
     public void save(@NotNull RssMessages rssItem) {
-        log.info("rssMessage with id " + rssItem.getId() + "was saved");
         rssRepository.saveAndFlush(rssItem);
     }
 
     @Override
     public void deleteAll() {
-        log.info("all messages were deleted");
         rssRepository.deleteAll();
     }
 
     @Override
     public void saveAll(@NotNull List<RssMessages> storedItems) {
-        log.info("all messages were saves");
         rssRepository.saveAll(storedItems);
     }
 
     @Override
     public @NotNull List<RssMessages> getAll() {
-        log.info("all messages from repository were read");
         return rssRepository.getAll();
     }
 
@@ -49,7 +45,6 @@ public class RssServiceImpl implements RssService {
             log.error("Entry not found for this count : " + count);
             throw new ResourceNotFoundException("Entry not found for this count : " + count);
         }
-        log.info(count + " messages were read ");
         return rssRepository.getItems(count);
     }
 }

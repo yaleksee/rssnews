@@ -20,10 +20,9 @@ public class RSSFeedParser {
     static final String LINK = "link";
     static final String ITEM = "item";
     static final String GUID = "guid";
-    private final List<RssMessages> rssItems = new ArrayList<>();
-
 
     public List<RssMessages> readFeed(XMLEventReader eventReader) {
+        final List<RssMessages> rssItems = new ArrayList<>();
         try {
             boolean isFeedHeader = true;
             String description = "";
@@ -43,6 +42,7 @@ public class RSSFeedParser {
                             break;
                         case TITLE:
                             title = getCharacterData(eventReader);
+                            title = title.replaceAll("[^A-Za-zА-Яа-я0-9\\u0020]", "");
                             break;
                         case DESCRIPTION:
                             description = getCharacterData(eventReader);
@@ -64,10 +64,10 @@ public class RSSFeedParser {
                         final RssMessages rssItem = new RssMessages();
                         Long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
                         rssItem.setId(id);
-                        rssItem.setDescription(description);
-                        rssItem.setGuid(guid);
-                        rssItem.setLink(link);
-                        rssItem.setTitle(title);
+                        rssItem.setDescription(description.trim());
+                        rssItem.setGuid(guid.trim());
+                        rssItem.setLink(link.trim());
+                        rssItem.setTitle(title.trim());
                         rssItem.setPubDate(generatePubDate());
                         rssItems.add(rssItem);
                         log.info("new RssMessage was parsed " + rssItem.toString());

@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.isNull;
 
@@ -27,30 +28,39 @@ public class RSSRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public void saveAndFlush(RssMessages rssMessages) {
-        final String update = "insert into RSS_MESSAGE (id, title, description, link, guid, pub_date) values(?,?,?,?,?,?)";
-        try {
-            jdbcTemplate.update(
-                    update,
-                    rssMessages.getId(),
-                    rssMessages.getTitle(),
-                    rssMessages.getDescription(),
-                    rssMessages.getLink(),
-                    rssMessages.getGuid(),
-                    rssMessages.getPubDate().toInstant());
-        } catch (DuplicateKeyException e) {
-            log.error(e.getMessage());
+        final String title = rssMessages.getTitle();
+        final String sql = String.format("SELECT count(1) FROM RSS_MESSAGE where title LIKE '%s'", title);
+        final Number number = jdbcTemplate.queryForObject(sql, Integer.class);
+        if (Objects.requireNonNull(number).intValue() == 0) {
+            final String update = "insert into RSS_MESSAGE (id, title, description, link, guid, pub_date) values(?,?,?,?,?,?)";
+            try {
+                jdbcTemplate.update(
+                        update,
+                        rssMessages.getId(),
+                        rssMessages.getTitle(),
+                        rssMessages.getDescription(),
+                        rssMessages.getLink(),
+                        rssMessages.getGuid(),
+                        rssMessages.getPubDate().toInstant());
+            } catch (DuplicateKeyException e) {
+                log.error(e.getMessage());
+            }
+            log.info("rssMessage with id " + rssMessages.getId() + "was saved");
         }
     }
 
     public void saveAll(List<RssMessages> storedItems) {
-        storedItems.stream().forEach(item -> saveAndFlush(item));
+        storedItems.forEach(this::saveAndFlush);
+        log.info("all messages were saves");
     }
 
     public void deleteAll() {
         jdbcTemplate.update("DELETE FROM RSS_MESSAGE");
+        log.info("all messages were deleted");
     }
 
     public List<RssMessages> getAll() {
+        log.info("all messages from repository were read");
         return jdbcTemplate.query("select * from RSS_MESSAGE", new RssEntityRowMapper());
     }
 
