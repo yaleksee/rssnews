@@ -1,7 +1,8 @@
-package com.games.rssnews.parser;
+package com.games.rssreader.parser;
 
-import com.games.rssnews.exceptions.XmlParsingException;
-import com.games.rssnews.model.RssItem;
+import com.games.rssreader.exceptions.XmlParsingException;
+import com.games.rssreader.model.RssMessages;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLEventReader;
@@ -9,32 +10,26 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @Component
+@Slf4j
 public class RSSFeedParser {
     static final String TITLE = "title";
     static final String DESCRIPTION = "description";
     static final String LINK = "link";
-    static final String AUTHOR = "author";
     static final String ITEM = "item";
     static final String GUID = "guid";
 
 
-
-    public List<RssItem> readFeed(XMLEventReader eventReader) {
-        final List<RssItem> rssItems = new ArrayList<>();
+    public List<RssMessages> readFeed(XMLEventReader eventReader) {
+        final List<RssMessages> rssItems = new ArrayList<>();
         try {
             boolean isFeedHeader = true;
             String description = "";
             String title = "";
             String link = "";
-            String author = "";
             String guid = "";
-
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 if (event.isStartElement()) {
@@ -58,20 +53,19 @@ public class RSSFeedParser {
                         case GUID:
                             guid = getCharacterData(event, eventReader);
                             break;
-                        case AUTHOR:
-                            author = getCharacterData(event, eventReader);
-                            break;
                     }
                 } else if (event.isEndElement()) {
                     if (event.asEndElement().getName().getLocalPart().equals(ITEM)) {
-                        final RssItem rssItem = new RssItem();
-                        rssItem.setAuthor(author);
+                        final RssMessages rssItem = new RssMessages();
+                        Long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+                        rssItem.setId(id);
                         rssItem.setDescription(description);
                         rssItem.setGuid(guid);
                         rssItem.setLink(link);
                         rssItem.setTitle(title);
                         rssItem.setPubDate(generatePubDate());
                         rssItems.add(rssItem);
+                        log.info("new RssMessage was parsed " + rssItem.toString());
                         eventReader.nextEvent();
                     }
                 }

@@ -1,4 +1,4 @@
-package com.games.rssnews;
+package com.games.rssreader;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.games.rssnews.exceptions;
+package com.games.rssreader.exceptions;
 
 import lombok.Data;
 

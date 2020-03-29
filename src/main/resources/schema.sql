@@ -1,11 +1,12 @@
-create table rss_item
+-- DROP TABLE IF EXISTS TESTQ;
+CREATE TABLE RSS_MESSAGE
 (
-   id varchar(255) primary key,
-   title varchar(255) not null,
-   description varchar(255) not null,
-   link varchar(255) not null,
-   author varchar(255) not null,
-   guid varchar(255) not null,
-   pub_date TIMESTAMP WITH TIME ZONE,
-   primary key(id)
+    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    title       VARCHAR NOT NULL,
+    description VARCHAR NOT NULL,
+    link        VARCHAR NOT NULL,
+--     author      VARCHAR(255) NOT NULL,
+    guid        VARCHAR NOT NULL,
+    pub_date    TIMESTAMP WITH TIME ZONE,
+    primary key (id)
 );
