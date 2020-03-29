@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+	<title>Eclipse and Android Information</title>
+	<link>http://www.vogella.com</link>
+	<description>Eclipse and Android Information</description>
+	<language>en</language>
+	<copyright>Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Germany (CC BY-NC-SA 3.0)</copyright>
+	<pubDate>Tue, 03 May 2016 11:46:11 +0200</pubDate>
+<item>
+	<title>Android user interface testing with Espresso - Tutorial
+</title>
+	<description> This tutorial describes how to test Android     applications with     the     Android Espresso testing framework.    </description>
+	<link>http://www.vogella.com/tutorials/AndroidTestingEspresso/article.html</link>
+	<author>lars.vogel@vogella.com (Lars Vogel)</author>
+	<guid>http://www.vogella.com/tutorials/AndroidTestingEspresso/article.html</guid>
+
+</item>
+</channel>
+</rss>

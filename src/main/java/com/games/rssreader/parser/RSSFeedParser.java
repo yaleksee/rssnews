@@ -12,6 +12,8 @@ import javax.xml.stream.events.XMLEvent;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static com.games.rssreader.util.Util.generatePubDate;
+
 @Component
 @Slf4j
 public class RSSFeedParser {
@@ -62,15 +64,19 @@ public class RSSFeedParser {
                     }
                     if (event.asEndElement().getName().getLocalPart().equals(ITEM)) {
                         final RssMessages rssItem = new RssMessages();
-                        Long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-                        rssItem.setId(id);
-                        rssItem.setDescription(description.trim());
-                        rssItem.setGuid(guid.trim());
-                        rssItem.setLink(link.trim());
-                        rssItem.setTitle(title.trim());
-                        rssItem.setPubDate(generatePubDate());
-                        rssItems.add(rssItem);
-                        log.info("new RssMessage was parsed " + rssItem.toString());
+                        if (!description.equals("") && !guid.equals("") && !link.equals("") && !title.equals("")) {
+                            Long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+                            rssItem.setId(id);
+                            rssItem.setDescription(description.trim());
+                            rssItem.setGuid(guid.trim());
+                            rssItem.setLink(link.trim());
+                            rssItem.setTitle(title.trim());
+                            rssItem.setPubDate(generatePubDate());
+                            rssItems.add(rssItem);
+                            log.info("new RssMessage was parsed " + rssItem.toString());
+                        } else {
+                            throw new XmlParsingException("Input Message in XML was empty");
+                        }
                         eventReader.nextEvent();
                     }
                 }
@@ -79,19 +85,6 @@ public class RSSFeedParser {
             throw new XmlParsingException("Error parsing XML ", e);
         }
         return rssItems;
-    }
-
-    private ZonedDateTime generatePubDate() {
-        GregorianCalendar gc = new GregorianCalendar();
-        int year = randBetween(2019, 2020);
-        gc.set(Calendar.YEAR, year);
-        int dayOfYear = randBetween(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR));
-        gc.set(Calendar.DAY_OF_YEAR, dayOfYear);
-        return gc.toZonedDateTime();
-    }
-
-    public static int randBetween(int start, int end) {
-        return start + (int) Math.round(Math.random() * (end - start));
     }
 
     private String getCharacterData(XMLEventReader eventReader)

@@ -1,5 +1,6 @@
 package com.games.rssreader.sheduler;
 
+import com.games.rssreader.exceptions.XmlParsingException;
 import com.games.rssreader.model.RssMessages;
 import com.games.rssreader.parser.RSSFeedParser;
 import com.games.rssreader.service.RssService;
@@ -35,7 +36,7 @@ public class SchedulerApp {
             log.info("recording posts from rss feed on time: " + " " + new GregorianCalendar().getTime().toString());
             rssItems = rssFeedParser.readFeed(read());
             rssService.saveAll(rssItems);
-        } catch (Exception e) {
+        } catch (XmlParsingException e) {
             log.error(e.getMessage());
         }
     }

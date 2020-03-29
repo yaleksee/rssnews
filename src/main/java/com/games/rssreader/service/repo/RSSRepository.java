@@ -41,7 +41,7 @@ public class RSSRepository {
                         rssMessages.getDescription(),
                         rssMessages.getLink(),
                         rssMessages.getGuid(),
-                        rssMessages.getPubDate().toInstant());
+                        rssMessages.getPubDate());
             } catch (DuplicateKeyException e) {
                 log.error(e.getMessage());
             }
