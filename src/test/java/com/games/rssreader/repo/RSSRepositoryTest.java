@@ -1,24 +1,27 @@
 package com.games.rssreader.repo;
 
 import com.games.rssreader.TestDataCreator;
+import com.games.rssreader.exceptions.ResourceNotFoundException;
+import com.games.rssreader.exceptions.XmlParsingException;
 import com.games.rssreader.model.RssMessages;
 import com.games.rssreader.service.repo.RSSRepository;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -82,6 +85,19 @@ public class RSSRepositoryTest {
         // then
         List<RssMessages> storedMessages = rssRepository.getAll();
         assertEquals(1, storedMessages.size());
+    }
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void testCheckCount() {
+        final List<RssMessages> messagesList = new ArrayList<>();
+        final RssMessages rssMessages = TestDataCreator.createRssMessages(0);
+        messagesList.add(rssMessages);
+        rssRepository.saveAll(messagesList);
+        expectedException.expectMessage("Enter count less than 1");
+        rssRepository.checkCount(10L);
     }
 
 }

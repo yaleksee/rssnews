@@ -44,7 +44,7 @@ public class RSSFeedParserTest {
     }
 
     @Test
-    public void shouldReturnListParsedMessaged() {
+    public void testReturnListParsedMessaged() {
         // given
         List<RssMessages> parsedItems = Arrays.asList(new RssMessages(), new RssMessages());
         when(rssFeedParser.readFeed(eventReader)).thenReturn(parsedItems);
@@ -67,7 +67,7 @@ public class RSSFeedParserTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void shouldThrowExceptionIfParsingFailed() {
+    public void testThrowExceptionIfParsingFailed() {
         when(rssFeedParser.readFeed(eventReaderError)).thenThrow(XmlParsingException.class);
         expectedException.expect(XmlParsingException.class);
         rssFeedParser.readFeed(eventReaderError);

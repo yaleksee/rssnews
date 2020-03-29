@@ -1,8 +1,11 @@
 package com.games.rssreader.service;
 
+import com.games.rssreader.exceptions.XmlParsingException;
 import com.games.rssreader.model.RssMessages;
 import com.games.rssreader.service.RssService;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +19,7 @@ import javax.validation.constraints.NotNull;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 import java.time.ZonedDateTime;
 import java.util.List;
